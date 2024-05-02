@@ -1,4 +1,4 @@
-from error import PyDockerHubError
+from pydockerhub.error import PyDockerHubError
 
 
 class DockerHubError(PyDockerHubError):

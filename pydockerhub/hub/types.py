@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Dict
 
-from http_calls.response import HttpCallResponse
+from pydockerhub.http_calls.response import HttpCallResponse
 
 
 class ApiCaller(ABC):

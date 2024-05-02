@@ -2,10 +2,10 @@ import json
 from typing import Dict, Tuple
 import logging
 import httpx
-from http_calls.request import RequestConfig
-from http_calls.response import HttpCallResponse
-from http_calls.errors import HttpCallError
-from hub.types import ApiCaller
+from pydockerhub.http_calls.request import RequestConfig
+from pydockerhub.http_calls.response import HttpCallResponse
+from pydockerhub.http_calls.errors import HttpCallError
+from pydockerhub.hub.types import ApiCaller
 
 logging.basicConfig(
     format="%(levelname)s [%(asctime)s] %(name)s - %(message)s",

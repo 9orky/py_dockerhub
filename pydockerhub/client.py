@@ -1,12 +1,12 @@
 from typing import List
 
 from exception import handle_exception
-from http_calls.caller import HttpClient
-from hub.models import Repository, Tag, SearchQuery, Credentials, Session, NewRepository
-from hub.types import ApiCaller
+from pydockerhub.http_calls.caller import HttpClient
+from pydockerhub.hub.models import Repository, Tag, SearchQuery, Credentials, Session, NewRepository
+from pydockerhub.hub.types import ApiCaller
 
 
-class DockerHub:
+class PyDockerHub:
     def __init__(self, api_caller: ApiCaller):
         self.caller = api_caller
         self.credentials: Credentials | None = None

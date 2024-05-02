@@ -2,8 +2,8 @@ import functools
 import logging
 
 from error import PyDockerHubError
-from http_calls.errors import HttpCallError
-from hub.errors import DockerHubError
+from pydockerhub.http_calls.errors import HttpCallError
+from pydockerhub.hub.errors import DockerHubError
 
 
 def handle_exception(func):
@@ -18,7 +18,7 @@ def handle_exception(func):
             logger.error(f'Error during HTTP call: {str(e)}')
             raise
         except DockerHubError as e:
-            logger.error(f'Error during DockerHub call: {str(e)}')
+            logger.error(f'Error during PyDockerHub call: {str(e)}')
             raise
         except PyDockerHubError as e:
             logger.error(f'PyDockerHub error: {str(e)}')

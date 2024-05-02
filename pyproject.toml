@@ -1,9 +1,12 @@
 [tool.poetry]
 name = "pydockerhub"
 version = "1.0.0"
-description = "DockerHub Client"
+description = "Extended Docker Hub API Client"
 authors = ["Tomasz Szpak <tomszp@gmail.com>"]
-package-mode = true
+readme = "README.md"
+license = "Apache-2.0"
+repository = "https://github.com/9orky/py_dockerhub"
+packages = [{include = "pydockerhub"}]
 
 [tool.poetry.dependencies]
 python = "^3.12"

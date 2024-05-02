@@ -12,5 +12,9 @@ class RequestConfig(BaseModel):
     }
 
     def with_headers(self, headers: Dict[str, str]) -> 'RequestConfig':
-        new_headers = self.headers | headers
-        return RequestConfig(headers=new_headers)
+        merged_headers = self.headers | headers
+        return RequestConfig(headers=merged_headers)
+
+    @staticmethod
+    def with_replaced_headers(headers: Dict[str, str]) -> 'RequestConfig':
+        return RequestConfig(headers=headers)

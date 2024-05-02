@@ -15,15 +15,3 @@ class HttpCallResponse(BaseModel):
             return self.json_data[key]
         except KeyError:
             return None
-
-    @property
-    def is_ok(self) -> bool:
-        return 200 <= self.status_code < 300
-
-    @property
-    def my_fault(self) -> bool:
-        return 400 <= self.status_code < 500
-
-    @property
-    def their_fault(self) -> bool:
-        return 500 <= self.status_code < 600
