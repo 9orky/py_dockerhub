@@ -18,7 +18,7 @@ jobs:
         run: echo "${HOME}/.poetry/bin" >> $GITHUB_PATH
 
       - run: poetry install
-      - run: poetry config pypi-token.pypi "${{ secrets.PYPI_TOKEN }}"
+      - run: poetry config pypi-token.pypi "${{ secrets.POETRY_PUBLISH_TOKEN }}"
       - run: poetry self add poetry-version-plugin
 
       - name: Publish package
