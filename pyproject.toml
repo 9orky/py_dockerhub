@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pydockerhub"
-version = "1.0.0"
+version = "1.2.0"
 description = "Extended Docker Hub API Client"
 authors = ["Tomasz Szpak <tomszp@gmail.com>"]
 readme = "README.md"
