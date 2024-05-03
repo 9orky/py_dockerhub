@@ -1,16 +1,25 @@
-name: Build and publish to pypi.org
-
+name: Publish to PyPI
 on:
   release:
-    types: [ published ]
+    types: [published]
 
 jobs:
-  publish-service-client-package:
+  publish-to-pypi:
+    name: Builds Using Poetry and Publishes to PyPI
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
-      - name: Publish PyPi package
-        uses: code-specialist/pypi-poetry-publish@v1
-        with:
-          PUBLISH_REGISTRY_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+
+      - name: Install Poetry
+        run: curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
+
+      - name: Add Poetry to path
+        run: echo "${HOME}/.poetry/bin" >> $GITHUB_PATH
+
+      - run: poetry install
+      - run: poetry config pypi-token.pypi "${{ secrets.PYPI_TOKEN }}"
+      - run: poetry self add poetry-version-plugin
+
+      - name: Publish package
+        run: poetry publish --build
