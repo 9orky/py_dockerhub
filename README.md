@@ -44,5 +44,3 @@ compromising your password when inviting collaborators. Then, you just use a `to
   "password": "dckr_pat_9QNXBGGtZt7(...)"
 }
 ```
-
-## Usage

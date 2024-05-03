@@ -1,5 +1,5 @@
 from pydockerhub.error import PyDockerHubError
 
 
-class HttpCallError(PyDockerHubError):
+class ApiCallError(PyDockerHubError):
     ...

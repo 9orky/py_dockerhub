@@ -38,6 +38,11 @@ class Tag(BaseModel):
     created_at: datetime = Field(..., alias='last_updated')
 
 
+class PathParams(BaseModel):
+    namespace: str = ''
+    repository: str = ''
+
+
 class SearchQuery(BaseModel):
     page: int = 1
     page_size: int = 100

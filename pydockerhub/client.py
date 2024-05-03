@@ -1,8 +1,9 @@
 from typing import List
 
-from exception import handle_exception
-from pydockerhub.http_calls.caller import HttpClient
-from pydockerhub.hub.models import Repository, Tag, SearchQuery, Credentials, Session, NewRepository
+from pydockerhub.api_calls.caller import HttpCaller
+from pydockerhub.exception import handle_exception
+from pydockerhub.hub import actions
+from pydockerhub.hub.models import Repository, Tag, SearchQuery, Credentials, Session, NewRepository, PathParams
 from pydockerhub.hub.types import ApiCaller
 
 
@@ -11,9 +12,12 @@ class PyDockerHub:
         self.caller = api_caller
         self.credentials: Credentials | None = None
 
+    def _build_path_params(self, repository: str = '') -> PathParams:
+        return PathParams(namespace=self.credentials.username, repository=repository)
+
     @classmethod
     def with_caller(cls):
-        return cls(api_caller=HttpClient())
+        return cls(api_caller=HttpCaller())
 
     @classmethod
     def build_search(cls, page: int = 1, page_size: int = 100, ordering: str = '-name') -> SearchQuery:
@@ -21,34 +25,35 @@ class PyDockerHub:
 
     @handle_exception
     def login(self, credentials: Credentials) -> Session:
-        response = self.caller.call('POST /users/login', body=credentials.model_dump())
-        session = Session(**response.json_data)
+        response = self.caller.call(actions.CreateSession(body=credentials))
+        session = Session(**response.body)
 
-        self.caller.authorize(session.as_header())
+        self.caller.authenticate_calls(session)
         self.credentials = credentials
 
         return session
 
     @handle_exception
-    def search_repositories(self, query: SearchQuery) -> List[Repository]:
-        response = self.caller.call(f'GET /repositories/{self.credentials.username}', p=query.model_dump())
+    def search_repositories(self, search: SearchQuery) -> List[Repository]:
+        response = self.caller.call(actions.SearchRepositories(search=search), self._build_path_params())
         return [Repository(**repo) for repo in response.get_json_value(key='results')]
 
     @handle_exception
-    def get_repository(self, name: str) -> Repository:
-        response = self.caller.call(f'GET /repositories/{self.credentials.username}/{name}')
-        return Repository(**response.json_data)
+    def get_repository(self, repository: str) -> Repository:
+        response = self.caller.call(actions.GetRepository(), self._build_path_params(repository))
+        return Repository(**response.body)
 
     @handle_exception
-    def create_repository(self, name: str) -> None:
-        payload = NewRepository(**{'namespace': self.credentials.username, 'name': name})
-        self.caller.call('POST /repositories/', body=payload.model_dump())
+    def create_repository(self, repository: str) -> None:
+        data = self._build_path_params(repository).model_dump()
+        data['name'] = data.pop('repository')
+        self.caller.call(actions.CreateRepository(body=NewRepository(**data)))
 
     @handle_exception
-    def delete_repository(self, name: str) -> None:
-        self.caller.call(f'DELETE /repositories/{self.credentials.username}/{name}/')
+    def delete_repository(self, repository: str) -> None:
+        self.caller.call(actions.DeleteRepository(), self._build_path_params(repository))
 
     @handle_exception
-    def search_repository_tags(self, name: str, query: SearchQuery) -> List[Tag]:
-        response = self.caller.call(f'GET /repositories/{self.credentials.username}/{name}/tags', p=query.model_dump())
+    def search_repository_tags(self, repository: str, search: SearchQuery) -> List[Tag]:
+        response = self.caller.call(actions.SearchRepositoryTags(search=search), self._build_path_params(repository))
         return [Tag(**tag) for tag in response.get_json_value(key='results')]
