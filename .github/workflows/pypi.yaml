@@ -1,51 +1,17 @@
-name: Publish Package to PyPI
+name: Build and publish to pypi.org
 
 on:
-  workflow_dispatch:
   release:
-    types: [released]
-
-permissions:
-  contents: read
+    types: [ published ]
 
 jobs:
-  build:
+  publish-service-client-package:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Set up Python
-        uses: actions/setup-python@v3
-        with:
-          python-version: "3.x"
-
-      - name: Install and configure Poetry
-        uses: snok/install-poetry@v1
-        with:
-          virtualenvs-create: true
-          installer-parallel: true
-
-      - name: Build package
-        run: poetry install && poetry build
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: dist
-          path: ./dist/
-
-  publish:
-    runs-on: ubuntu-latest
-    environment: release
     permissions:
-      id-token: write
-
+      contents: write
     steps:
-      - name: Download Artifact
-        uses: actions/download-artifact@v3
+      - name: Publish PyPi package
+        uses: code-specialist/pypi-poetry-publish@v1
         with:
-          name: dist
-          path: ./dist/
-
-      - name: Publish package distributions to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
+          ACCESS_TOKEN: ${{ secrets.POETRY_PUBLISH_TOKEN }}
+          PUBLISH_REGISTRY_PASSWORD: ${{ secrets.PYPI_TOKEN }}
